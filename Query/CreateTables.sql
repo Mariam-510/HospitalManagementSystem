@@ -5,7 +5,7 @@ Use Hospital
 create table Department
 (
     Id int identity(100,1) primary key,
-    Name nvarchar(100) not null
+    Name varchar(100) not null unique
 )
 
 --------------------------------------------------------------------------------------------------
@@ -14,114 +14,111 @@ create table Employee
 (
     Id int identity(1,1) primary key,
     EmpType char(1) not null check (EmpType in ('D', 'N', 'R')), -- restrict to D, N, or R
-    Fname nvarchar(50) not null,
-    Lname nvarchar(50) not null,
+    Fname varchar(50) not null,
+    Lname varchar(50) not null,
     DOB date not null,
-    Phone nvarchar(15),
+    Phone varchar(15) not null unique,
     Gender char(1) not null check (Gender in ('M', 'F')),    -- restrict to M, F
-    Street nvarchar(100),
-    City nvarchar(50) default 'Cairo',
-    State nvarchar(50) default 'Egypt', --edit
+    Street varchar(100),
+    City varchar(50) default 'Cairo',
+    State varchar(50) default 'Egypt',
     DeptID int foreign key references Department(id)
 )
 
 --------------------------------------------------------------------------------------------------
 --Doctor table
-create table Doctor (
+create table Doctor
+(
     Id int primary key foreign key references Employee(id),
     Speciality nvarchar(100) not null
 )
 
 --------------------------------------------------------------------------------------------------
 --Nurse table
-create table Nurse (
+create table Nurse 
+(
     Id int primary key foreign key references Employee(id)
 )
 
+--------------------------------------------------------------------------------------------------
 --Receptionist table
-create table Receptionist (
+create table Receptionist 
+(
     Id int primary key foreign key references Employee(id)
-);
+)
 
 --------------------------------------------------------------------------------------------------
 --Room Table
 Create Table Room 
 (
- Num int primary key identity (100,1),
- Availblitiy char(1) not null default 'Y', --num or char
- Capacity int,
- NId int foreign key references Nurse(Id)
+	Num int primary key identity (100,1),
+	MaxCapacity int not null, --edit
+	CurrentCapacity int,
+	NId int foreign key references Nurse(Id)
 )
 
 --------------------------------------------------------------------------------------------------
 --Patient Table
 create table Patient
 (
-Id int primary key identity(1,1),
-PType varchar(2) check (PType in ('I', 'O')) default 'O'not null,
-FName varchar(50) not null,
-LName varchar(50),
-DOB date,
-Gender varchar(1) check (Gender in ('M', 'F')),
-Street varchar(50),
-City varchar(50) default 'Cairo',
-State varchar(50) default 'Egypt',
-AdmittedDate datetime2 default getdate() 
+	Id int primary key identity(1,1),
+	PType varchar(2) check (PType in ('I', 'O')) not null,
+	FName varchar(50) not null,
+	LName varchar(50),
+	DOB date,
+	Phone varchar(15) not null unique,
+	Gender varchar(1) check (Gender in ('M', 'F')),
+	Street varchar(50),
+	City varchar(50) default 'Cairo',
+	State varchar(50) default 'Egypt',
+	AdmittedDate datetime2 default getdate() 
 )
 
 --------------------------------------------------------------------------------------------------
 --InPatient Table
 create table InPatient
 (
-Id int primary key foreign key references Patient(Id),
-DischargeDate datetime2 default getdate(),
-RoNum int foreign key references Room(Num)
+	Id int primary key foreign key references Patient(Id),
+	DischargeDate datetime2,
+	RoNum int foreign key references Room(Num)
 )
 
 --------------------------------------------------------------------------------------------------
 --OutPatient Table
 create table OutPatient
 (
-Id int primary key foreign key references Patient(Id),
+	Id int primary key foreign key references Patient(Id),
 )
 
 --------------------------------------------------------------------------------------------------
 --Appointment Table
 create table Appointment
 (
-Id int primary key identity(1000,1),
-Date datetime2 not null default getdate(),
-Note varchar(100),
-DId int foreign key references Doctor(Id),
-PId int foreign key references Patient(Id),
-RId int foreign key references Receptionist(Id)
+	Id int primary key identity(1000,1),
+	Date datetime2 not null default getdate(),
+	Note varchar(100),
+	DId int foreign key references Doctor(Id),
+	PId int foreign key references Patient(Id),
+	RId int foreign key references Receptionist(Id)
 )
 
 --------------------------------------------------------------------------------------------------
 --Drug Table
 create table Drug
 (
-  code int primary key,
-  RecDosage varchar(50)
-)
-
---------------------------------------------------------------------------------------------------
---DrugBrand Table
-create Table DrugBrand
-(
-    DrugCode int foreign key references Drug(code),
-    BrandName varchar(50),
-	constraint Drug_Brand_pk primary Key(DrugCode, BrandName)
+	Code int primary key,
+	Name varchar(50),
+	RecDosage varchar(50)
 )
 
 --------------------------------------------------------------------------------------------------
 --Prescription Table
 create table Prescription
 (
-  Id int primary key identity (10,1),
-  Date datetime2 not null default getDate(), --edit
-  DID int foreign key references Doctor(Id),
-  PID int foreign key references Patient(Id) unique --edit
+	Id int primary key identity (10,1),
+	Date date not null default getDate(),
+	DID int foreign key references Doctor(Id),
+	PID int foreign key references Patient(Id)
 )
 
 --------------------------------------------------------------------------------------------------
@@ -138,23 +135,23 @@ create Table PrescriptionDrug
 --Report Table
 Create Table Report
 (
- Id int primary key identity (10,1),
- Disease varchar(100) not null,
- Symptom  varchar(100) not null,
- Diagnosis varchar(100),
- PId int foreign key references Patient(Id) unique, --edit
- DID int foreign key references Doctor(Id)
+	Id int primary key identity (10,1),
+	Disease varchar(100) not null,
+	Symptom  varchar(100) not null,
+	Diagnosis varchar(100) not null,
+	PId int foreign key references Patient(Id),
+	DID int foreign key references Doctor(Id)
 )
 
 --------------------------------------------------------------------------------------------------
 --Bill Table
 Create Table Bill
 (
- Id int primary key identity (10,1),
- Date datetime2 not null default getDate(),
- Amount decimal(10,2) not null, --make it money
- PId int foreign key references Patient(Id) unique, --edit
- RID int foreign key references Receptionist(Id)
+	Id int primary key identity (10,1),
+	Date datetime2 not null default getDate(),
+	Amount money not null, --edit
+	PId int foreign key references Patient(Id),
+	RID int foreign key references Receptionist(Id)
 )
 
 --------------------------------------------------------------------------------------------------
@@ -163,7 +160,8 @@ create Table ExaminePatient
 (
     DID int foreign key references Doctor(Id),
     PID int foreign key references Patient(Id),
-	constraint E_Patient_pk primary Key(DID, PID)
+	Date datetime2 not null default getdate(),
+	constraint E_Patient_pk primary Key(DID, PID, Date)
 )
 
 --------------------------------------------------------------------------------------------------
