@@ -67,14 +67,14 @@ values
 --Insert records into OutPatient table
 declare @InsertedOutPatientIdTable1 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, AdmittedDate)
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
 output inserted.Id into @InsertedOutPatientIdTable1
 values 
-	('O', 'Ali', 'Omar', '1995-11-05', '0121234567' ,'M', 'Park Lane', 'Giza', 'Egypt', '2024-12-29 5:30:00'),
-	('O','Ahmed', 'Mohamed', '2000-05-20', '0151234567', 'M', 'Broadway', default, default,'2024-12-27 10:30:00'),
-	('O','Mahmoud', null, '2005-07-07', '0101234567', 'M', null, default, default,'2024-12-30 4:00:00'),
-	('O', 'Sara', null, '1990-07-08', '0122234567', 'F', null, default, default, default),
-	('O', 'Mariam', null, '2004-05-09', '0125234567', 'F', 'Maadi', default, default,'2024-12-28 7:00:00')
+	('O', 'Ali', 'Omar', '1995-11-05', '0121234567' ,'M', 'Park Lane', 'Giza', 'Egypt', 3),
+	('O','Ahmed', 'Mohamed', '2000-05-20', '0151234567', 'M', 'Broadway', default, default, 1),
+	('O','Mahmoud', null, '2005-07-07', '0101234567', 'M', null, default, default, 2),
+	('O', 'Sara', null, '1990-07-08', '0122234567', 'F', null, default, default, 3),
+	('O', 'Mariam', null, '2004-05-09', '0125234567', 'F', 'Maadi', default, default, 5)
 
 insert into OutPatient (Id)
 select id from @InsertedOutPatientIdTable1
@@ -82,98 +82,95 @@ select id from @InsertedOutPatientIdTable1
 --------------------------------------------------------------------------------------------------
 --Insert records into InPatient table
 --First patient
-declare @InsertedInPatientIdTable1 table (Id int, AdmittedDate datetime2)
+declare @InsertedInPatientIdTable1 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State)
-output inserted.Id, inserted.AdmittedDate into @InsertedInPatientIdTable1
-values ('I', 'Fatma', 'Ahmed', '1997-12-03', '0100876543','F', null, 'Giza', 'Egypt')
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
+output inserted.Id into @InsertedInPatientIdTable1
+values ('I', 'Fatma', 'Ahmed', '1997-12-03', '0100876543','F', null, 'Giza', 'Egypt', 4)
 
-declare @InsertedInPatientId1 int, @InsertedInPatientAdmittedDate1 datetime2
-select @InsertedInPatientId1 = Id, @InsertedInPatientAdmittedDate1 = AdmittedDate from @InsertedInPatientIdTable1
+declare @InsertedInPatientId1 int
+select @InsertedInPatientId1 = Id from @InsertedInPatientIdTable1
 
-insert into InPatient (Id, RoNum, DischargeDate)
-values (@InsertedInPatientId1, 100, DATEADD(day, 7, @InsertedInPatientAdmittedDate1))
+insert into InPatient (Id, RoNum)
+values (@InsertedInPatientId1, 100)
 
 --------------------------------------------------------------------------------------------------
 --Second patient
-declare @InsertedInPatientIdTable2 table (Id int, AdmittedDate datetime2)
+declare @InsertedInPatientIdTable2 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State)
-output inserted.Id, inserted.AdmittedDate into @InsertedInPatientIdTable2
-values ('I', 'Hana', 'Khaled', '1998-06-15', '0101876543', 'F', 'Talaat Harb St', 'Cairo', 'Egypt');
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
+output inserted.Id into @InsertedInPatientIdTable2
+values ('I', 'Hana', 'Khaled', '1998-06-15', '0101876543', 'F', 'Talaat Harb St', 'Cairo', 'Egypt', 2)
 
-declare @InsertedInPatientId2 int, @InsertedInPatientAdmittedDate2 datetime2
-select @InsertedInPatientId2 = Id, @InsertedInPatientAdmittedDate2 = AdmittedDate from @InsertedInPatientIdTable2
+declare @InsertedInPatientId2 int
+select @InsertedInPatientId2 = Id from @InsertedInPatientIdTable2
 
-insert into InPatient (Id, RoNum, DischargeDate)
-values (@InsertedInPatientId2, 101, DATEADD(day, 5, @InsertedInPatientAdmittedDate2))
+insert into InPatient (Id, RoNum)
+values (@InsertedInPatientId2, 101)
 
 --------------------------------------------------------------------------------------------------
 --Third patient
-declare @InsertedInPatientIdTable3 table (Id int, AdmittedDate datetime2)
+declare @InsertedInPatientIdTable3 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State)
-output inserted.Id, inserted.AdmittedDate into @InsertedInPatientIdTable3
-values ('I', 'Omar', 'Ibrahim', '1990-03-12', '0106876543', 'M', 'Corniche Rd', 'Alexandria', 'Egypt');
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
+output inserted.Id into @InsertedInPatientIdTable3
+values ('I', 'Omar', 'Ibrahim', '1990-03-12', '0106876543', 'M', 'Corniche Rd', 'Alexandria', 'Egypt', 1)
 
-declare @InsertedInPatientId3 int, @InsertedInPatientAdmittedDate3 datetime2
-select @InsertedInPatientId3 = Id, @InsertedInPatientAdmittedDate3 = AdmittedDate from @InsertedInPatientIdTable3
+declare @InsertedInPatientId3 int
+select @InsertedInPatientId3 = Id from @InsertedInPatientIdTable3
 
-insert into InPatient (Id, RoNum, DischargeDate)
-values (@InsertedInPatientId3, 102, DATEADD(day, 8, @InsertedInPatientAdmittedDate3))
+insert into InPatient (Id, RoNum)
+values (@InsertedInPatientId3, 102)
 
 --------------------------------------------------------------------------------------------------
 --Forth patient
-declare @InsertedInPatientIdTable4 table (Id int, AdmittedDate datetime2)
+declare @InsertedInPatientIdTable4 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State)
-output inserted.Id, inserted.AdmittedDate into @InsertedInPatientIdTable4
-values ('I', 'Youssef', 'Ali', '1992-04-22', '0109976543', 'M', 'Shubra Rd', 'Cairo', 'Egypt');
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
+output inserted.Id into @InsertedInPatientIdTable4
+values ('I', 'Youssef', 'Ali', '1992-04-22', '0109976543', 'M', 'Shubra Rd', 'Cairo', 'Egypt', 4)
 
-declare @InsertedInPatientId4 int, @InsertedInPatientAdmittedDate4 datetime2
-select @InsertedInPatientId4 = Id, @InsertedInPatientAdmittedDate4 = AdmittedDate from @InsertedInPatientIdTable4
+declare @InsertedInPatientId4 int
+select @InsertedInPatientId4 = Id from @InsertedInPatientIdTable4
 
-insert into InPatient (Id, RoNum, DischargeDate)
-values (@InsertedInPatientId4, 103, DATEADD(day, 6, @InsertedInPatientAdmittedDate4))
+insert into InPatient (Id, RoNum)
+values (@InsertedInPatientId4, 103)
 
 --------------------------------------------------------------------------------------------------
 --Fifth patient
-declare @InsertedInPatientIdTable5 table (Id int, AdmittedDate datetime2)
+declare @InsertedInPatientIdTable5 table (Id int)
 
-insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, AdmittedDate)
-output inserted.Id, inserted.AdmittedDate into @InsertedInPatientIdTable5
-values ('I', 'Salma', 'Hussein', '2001-10-08', '0106800543', 'F', 'Nasr St', 'Mansoura', 'Egypt', '2024-12-30 8:00:00');
+insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
+output inserted.Id into @InsertedInPatientIdTable5
+values ('I', 'Salma', 'Hussein', '2001-10-08', '0106800543', 'F', 'Nasr St', 'Mansoura', 'Egypt', 1);
 
-declare @InsertedInPatientId5 int, @InsertedInPatientAdmittedDate5 datetime2
-select @InsertedInPatientId5 = Id, @InsertedInPatientAdmittedDate5 = AdmittedDate from @InsertedInPatientIdTable5
+declare @InsertedInPatientId5 int
+select @InsertedInPatientId5 = Id from @InsertedInPatientIdTable5
 
-insert into InPatient (Id, RoNum, DischargeDate)
-values (@InsertedInPatientId5, 104, DATEADD(day, 8, @InsertedInPatientAdmittedDate5))
+insert into InPatient (Id, RoNum)
+values (@InsertedInPatientId5, 104)
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Appointment table
 insert into Appointment (Date, Note, DId, PId, RId)
 values 
-	('2024-12-29 5:30:00', 'Follow-up check', 3, 1, 12), ('2024-12-27 10:30:00', 'Routine visit', 1, 2, 12)
-
-insert into Appointment (Date, DId, PId, RId)
-values
-	('2024-12-30 4:00:00', 2, 3, 11), ('2024-12-28 7:00:00', 5, 5, 11), ('2024-12-30 8:00:00', 1, 10, 12)
-
-insert into Appointment (DId, PId, RId)
-values	
-	(3, 4, 13), (4, 6, 13), (2, 7, 11)
-
-insert into Appointment (Note, DId, PId, RId)
-values 
-	('Emergency Appointment', 1, 8, 13), ('Emergency Appointment', 4, 9, 11)
+	('2024-12-29 5:30:00', 'Follow-up check', 3, 1, 12),
+	('2024-12-27 10:30:00', 'Routine visit', 1, 2, 12),
+	('2024-12-30 4:00:00', null, 2, 3, 11),
+	(getdate(), null, 3, 4, 13),
+	('2024-12-28 7:00:00', null, 5, 5, 11),
+	('2024-12-31 5:00:00', null, 4, 6, 13),
+	(getdate(), null, 2, 7, 11),
+	(getdate(), 'Emergency Appointment', 1, 8, 13),
+	(getdate(), 'Emergency Appointment', 4, 9, 11),
+	('2024-12-30 8:00:00', null, 1, 10, 12)
 
 --------------------------------------------------------------------------------------------------
 --Insert records into ExaminePatient table
-insert into ExaminePatient (DID, PID) 
+insert into ExamineInPatient (DID, InPID, date)
 values 
-	(3, 1), (1, 2), (2, 3), (3, 4),(5, 5),
-	(4, 6), (2, 7), (1, 8), (4, 9), (1, 10)
+	(4, 6, '2024-12-31 5:00:00'), (2, 7, getdate()), (1, 8, getdate()),
+	(4, 9, getdate()), (1, 10, '2024-12-30 8:00:00')
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Drug table
@@ -189,62 +186,74 @@ values
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Report table
-insert into Report (Disease, Symptom, Diagnosis, DID, PId)
+insert into Report (Disease, Symptom, Diagnosis, PId)
 values
-  ('Hypertension', 'Dizziness', 'High Blood Pressure', 3, 1),
-  ('Diabetes', 'Thirst', 'Type 2 Diabetes', 1, 2),
-  ('Cold', 'Sneezing', 'Common Cold', 2, 3),
-  ('Flu', 'Fever', 'Influenza', 3, 4),
-  ('Migraine', 'Headache', 'Severe Migraine', 5, 5),
-  ('Stroke', 'Sudden numbness and difficulty speaking', 'Hemorrhagic Stroke', 4, 6),
-  ('Heart Attack', 'Chest pain or pressure', 'NSTEMI', 2, 7),
-  ('Stroke', 'Loss of balance', 'Brain Stem Stroke', 1, 8),
-  ('Heart Attack', 'Shortness of breath', 'STEMI', 4, 9),
-  ('Rheumatoid Arthritis (RA)', 'Persistent joint pain and swelling', 'Seropositive RA (with specific antibodies)', 1, 10)
+  ('Hypertension', 'Dizziness', 'High Blood Pressure', 1),
+  ('Diabetes', 'Thirst', 'Type 2 Diabetes', 2),
+  ('Cold', 'Sneezing', 'Common Cold', 3),
+  ('Flu', 'Fever', 'Influenza', 4),
+  ('Migraine', 'Headache', 'Severe Migraine', 5),
+  ('Stroke', 'Sudden numbness and difficulty speaking', 'Hemorrhagic Stroke', 6),
+  ('Heart Attack', 'Chest pain or pressure', 'NSTEMI', 7),
+  ('Stroke', 'Loss of balance', 'Brain Stem Stroke', 8),
+  ('Heart Attack', 'Shortness of breath', 'STEMI', 9),
+  ('Rheumatoid Arthritis (RA)', 'Persistent joint pain and swelling', 'Seropositive RA (with specific antibodies)', 10)
 
---------------------------------------------------------------------------------------------------
+ --------------------------------------------------------------------------------------------------
+--Insert records into ReportDoctor table
+insert into ReportDoctor (DID, RepID, Date)
+values
+	(3, 10, '2024-12-29 5:30:00'), (1, 11, '2024-12-27 10:30:00'), (2, 12, '2024-12-30 4:00:00'),
+	(3, 13, getdate()),(5, 14,'2024-12-28 7:00:00'),
+	(4, 15, '2024-12-31 5:00:00'), (2, 16, getdate()), (1, 17, getdate()),
+	(4, 18, getdate()), (1, 19, '2024-12-30 8:00:00')
+
+----------------------------------------------------------------------------------------------------
 --Insert records into Prescription table
-insert into Prescription (DID, PID)
+insert into Prescription (PID, Description)
 values
-	(3, 1), (1, 2), (2, 3), (3, 4),(5, 5),
-	(4, 6), (2, 7), (1, 8), (4, 9), (1, 10)
+	(1, 'Take Aliskiren 150mg If Needed'),
+	(2, 'Take Insulin 0.1 units/kg/hour IV infusion'),
+	(3, 'Take Panadol 350mg every 4-6 hours'),
+	(4, 'Take Panadol 400mg every 4-6 hours'),
+	(5, 'Take Cataflam 50mg 2-3 times a day'),
+	(6, 'Take Aspirin 400mg every 4-6 hours'),
+	(7, 'Take Digoxin 500mg every day for 5 days'),
+	(8, 'Take Aspirin 300mg every 4-6 hours'),
+	(9, 'Take Digoxin 700mg every day for 7 days'),
+	(10, 'Take Voltaren 100 mg once daily')
 
---------------------------------------------------------------------------------------------------
---Insert records into PrescriptionDrug table
-insert into PrescriptionDrug (PreID, DrugCode, Dosage) 
-values 
-(10, 123, '150mg If Needed'),
-(11, 122, '0.1 units/kg/hour IV infusion'),
-(12, 120, '350mg Tablet every 4-6 hours'),
-(13, 120, '400mg Tablet every 4-6 hours'),
-(14, 121, '50mg Tablet 2-3 times a day'),
-(15, 124, '400mg Tablet every 4-6 hours'),
-(16, 125, '500mg every day for 5 days'),
-(17, 124, '300mg Tablet every 4-6 hours'),
-(18, 125, '700mg every day for 7 days'),
-(19, 126, '100 mg once daily')
- 
+----------------------------------------------------------------------------------------------------
+--Insert records into ReportDoctor table
+insert into PrescriptionDoctor (DID, PreID, Date)
+values
+	(3, 10, '2024-12-29 5:30:00'), (1, 11, '2024-12-27 10:30:00'), (2, 12, '2024-12-30 4:00:00'),
+	(3, 13, getdate()),(5, 14,'2024-12-28 7:00:00'),
+	(4, 15, '2024-12-31 5:00:00'), (2, 16, getdate()), (1, 17, getdate()),
+	(4, 18, getdate()), (1, 19, '2024-12-30 8:00:00')
+
 --------------------------------------------------------------------------------------------------
 --Insert records into Bill table
-insert into Bill (Amount, PId, RID)
+insert into Bill (Amount, PId, RID, Date)
 values
-  (150, 1, 11),
-  (200, 2, 12),
-  (300, 3, 12),
-  (400, 4, 11),
-  (500, 5, 13),
-  (10000, 6, 13),
-  (20000, 7, 12),
-  (15000, 8, 11),
-  (25000, 9, 11),
-  (500, 10, 12)
+  (150, 1, 11, '2024-12-29 5:30:00'),
+  (200, 2, 12, '2024-12-27 10:30:00'),
+  (300, 3, 12, '2024-12-30 4:00:00'),
+  (400, 4, 11, getdate()),
+  (500, 5, 13, '2024-12-28 7:00:00'),
+  (10000, 6, 13, dateadd(day, 7, '2024-12-31 5:00:00')),
+  (20000, 7, 12, dateadd(day, 5, getdate())),
+  (15000, 8, 11, dateadd(day, 6, getdate())),
+  (25000, 9, 11, dateadd(day, 6, getdate())),
+  (500, 10, 12, dateadd(day, 7, '2024-12-30 8:00:00'))
 
---------------------------------------------------------------------------------------------------
-----Insert records into GivenDrug table
---insert into GivenDrug (Dosage, GivenDate, DrugCode, Inpid, NID) 
---values 
---('500mg tablet', '2024-12-01', 124, 6, 6)
---('50mg tablet', '2024-12-02', 125, 7, 7),
---('500mg tablet', '2024-12-04', 124, 8, 8),
---('350mg tablet', '2024-12-02', 125, 9, 9),
---('400mg tablet', '2024-12-03', 126, 10, 10)
+------------------------------------------------------------------------------------------------
+--Insert records into GivenDrug table
+insert into GivenDrug (Dosage, GivenDate, DrugCode, Inpid, NID) 
+values 
+('400mg', dateadd(day, 1, '2024-12-31 5:00:00'), 124, 6, 6),
+('500mg', dateadd(day, 1, getdate()), 125, 7, 7),
+('300mg', dateadd(day, 1, getdate()), 124, 8, 8),
+('700mg', dateadd(day, 1, getdate()), 125, 9, 9),
+('100mg', dateadd(day, 1, '2024-12-30 8:00:00'), 126, 10, 10)
+
