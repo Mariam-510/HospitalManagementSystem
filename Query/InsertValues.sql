@@ -3,12 +3,12 @@ use Hospital
 --------------------------------------------------------------------------------------------------
 --Insert records into Department table
 insert into Department (Name) 
-values ('Cardiology'), ('Neurology'), ('Pediatrics'), ('General Surgery'), ('Orthopedics'), ('Secretarial');
+values ('Cardiology'), ('Neurology'), ('Pediatrics'), ('General Surgery'), ('Orthopedics'), ('Secretarial')
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Doctor table
-declare @insertedDocIDt1 TABLE (id INT, Speciality NVARCHAR(100));
-insert into Employee (EmpType, Fname, Lname, DOB, Phone, Gender, Street, City, State, DeptID)
+declare @insertedDocIDt1 TABLE (id INT, Speciality NVARCHAR(100))
+insert into Employee (EmpType, Fname, Lname, DOB, Phone,Gender, Street, City, State, Salary, DeptID)
 output inserted.id, case 
                        when inserted.Fname = 'Ahmed' then 'Cardiologist'
                        when inserted.Fname = 'Khaled' then 'Neurologist'
@@ -17,45 +17,45 @@ output inserted.id, case
 					   when inserted.Fname = 'Mostafa' then 'Orthopedic Surgeon	'
                    end into @insertedDocIDt1
 values
-    ('D', 'Ahmed', 'Ali', '1985-05-12', '0123456789', 'M', 'Street 1', 'Giza', 'Egypt', 100),
-    ('D', 'Khaled', 'Mahmoud', '1980-11-05', '0103456789', 'M', 'Street 2', default, default, 102),
-    ('D', 'hala', 'Adel', '1990-07-20', '0113756780', 'F', 'Street 33', 'Alexandria', 'Egypt', 103),
-	('D', 'Rana', 'Samir', '1996-01-01', '0103950789', 'F', 'Street 51', default, default, 104),
-    ('D', 'Mostafa', 'Abdallah', '1989-06-05', '0123556787', 'M', 'Street 9', default, default, 101)
+    ('D', 'Ahmed', 'Ali', '1985-05-12', '0123456789', 'M', 'Street 1', 'Giza', 'Egypt',15000, 100),
+    ('D', 'Khaled', 'Mahmoud', '1980-11-05', '0103456789', 'M', 'Street 2', default, default, 12000, 102),
+    ('D', 'hala', 'Adel', '1990-07-20', '0113756780', 'F', 'Street 33', 'Alexandria', 'Egypt', 11000, 103),
+	('D', 'Rana', 'Samir', '1996-01-01', '0103950789', 'F', 'Street 51', default, default, 11500, 104),
+    ('D', 'Mostafa', 'Abdallah', '1989-06-05', '0123556787', 'M', 'Street 9', default, default, 14300, 101)
 
 insert into Doctor (Id, Speciality)
 select id, Speciality
-from @insertedDocIDt1;
+from @insertedDocIDt1
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Nurse table    
 DECLARE @insertedNurIDt2 TABLE (id INT)
-insert into Employee (EmpType, Fname, Lname, DOB, Phone, Gender, Street, City, State, DeptID)
+insert into Employee (EmpType, Fname, Lname, DOB, Phone, Gender, Street, City, State, Salary, DeptID)
 output inserted.Id into @insertedNurIDt2
 values
-	('N', 'Sara', 'Hassan', '1990-10-22', '01144456820', 'F', NULL, 'Giza', 'Egypt', 102),
-    ('N', 'Mona', 'Youssef', '1992-03-15', '0129876543', 'F', 'Street 3', default, default, 103),
-	('N', 'Hala', 'Youssef', '1991-12-19', '0109876543', 'F', 'Street 5', 'Alexandria', 'Egypt', 104),
-    ('N', 'Nour', 'Salem', '1989-05-11', '0111234567', 'F', 'Street 6', 'Giza', 'Egypt', 100),
-    ('N', 'Maha', 'Ezzat', '1994-03-22', '0123454321', 'F', 'Street 7', default, default, 101);
+	('N', 'Sara', 'Hassan', '1990-10-22', '01144456820', 'F', NULL, 'Giza', 'Egypt', 6000, 102),
+    ('N', 'Mona', 'Youssef', '1992-03-15', '0129876543', 'F', 'Street 3', default, default, 8000, 103),
+	('N', 'Hala', 'Youssef', '1991-12-19', '0109876543', 'F', 'Street 5', 'Alexandria', 'Egypt', 7000, 104),
+    ('N', 'Nour', 'Salem', '1989-05-11', '0111234567', 'F', 'Street 6', 'Giza', 'Egypt', 6030, 100),
+    ('N', 'Maha', 'Ezzat', '1994-03-22', '0123454321', 'F', 'Street 7', default, default, 5500, 101)
 
 INSERT INTO Nurse (Id)
 SELECT id
-FROM @insertedNurIDt2;
+FROM @insertedNurIDt2
 
 -----------------------------------------------------------------------------------------------
 --Insert records into Receptionist table
 DECLARE @insertedRecIDt2 TABLE (id INT)
-insert into Employee (EmpType, Fname, Lname, DOB, Phone, Gender, Street, City, State, DeptID)
+insert into Employee (EmpType, Fname, Lname, DOB, Phone, Gender, Street, City, State, Salary, DeptID)
 output inserted.Id into @insertedRecIDt2
 values
-	('R', 'Ahmed', 'Adel', '1990-10-22', '01150211405', 'M', NULL, default, default, 105),
-    ('R', 'Osama', 'Ali', '1992-03-15', '0119876543', 'M', 'Street 13', 'Alexandria', 'Egypt', 105),
-	('R', 'Hany', 'Hassan', '1991-12-19', '0159876543', 'M', 'Street 55', 'Giza', 'Egypt', 105)
+	('R', 'Ahmed', 'Adel', '1990-10-22', '01150211405', 'M', NULL, default, default, 5700, 105),
+    ('R', 'Osama', 'Ali', '1992-03-15', '0119876543', 'M', 'Street 13', 'Alexandria', 'Egypt', 4500, 105),
+	('R', 'Hany', 'Hassan', '1991-12-19', '0159876543', 'M', 'Street 55', 'Giza', 'Egypt', 5000, 105)
 
 INSERT INTO Receptionist(Id)
 SELECT id
-FROM @insertedRecIDt2;
+FROM @insertedRecIDt2
 
 --------------------------------------------------------------------------------------------------
 --Insert records into Room table
@@ -142,7 +142,7 @@ declare @InsertedInPatientIdTable5 table (Id int)
 
 insert into Patient (PType, FName, LName, DOB, Phone, Gender, Street, City, State, DId)
 output inserted.Id into @InsertedInPatientIdTable5
-values ('I', 'Salma', 'Hussein', '2001-10-08', '0106800543', 'F', 'Nasr St', 'Mansoura', 'Egypt', 1);
+values ('I', 'Salma', 'Hussein', '2001-10-08', '0106800543', 'F', 'Nasr St', 'Mansoura', 'Egypt', 1)
 
 declare @InsertedInPatientId5 int
 select @InsertedInPatientId5 = Id from @InsertedInPatientIdTable5

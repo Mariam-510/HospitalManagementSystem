@@ -18,7 +18,8 @@ create table Employee
     Lname varchar(50) not null,
     DOB date not null,
     Phone varchar(15) not null unique,
-    Gender char(1) not null check (Gender in ('M', 'F')),    -- restrict to M, F
+    Salary money not null check(Salary > 0),
+	Gender char(1) not null check (Gender in ('M', 'F')),    -- restrict to M, F
     Street varchar(100),
     City varchar(50) default 'Cairo',
     State varchar(50) default 'Egypt',
@@ -52,8 +53,8 @@ create table Receptionist
 Create Table Room 
 (
 	Num int primary key identity (100,1),
-	MaxCapacity int not null check(MaxCapacity > 0),
-	CurrentCapacity int check(CurrentCapacity > 0),
+	MaxCapacity int not null check(MaxCapacity >= 0),
+	CurrentCapacity int check(CurrentCapacity >= 0),
 	NId int foreign key references Nurse(Id)
 )
 
@@ -62,7 +63,7 @@ Create Table Room
 create table Patient
 (
 	Id int primary key identity(1,1),
-	PType varchar(2) check (PType in ('I', 'O')),
+	PType varchar(1) check (PType in ('I', 'O')),
 	FName varchar(50) not null,
 	LName varchar(50),
 	DOB date,
@@ -156,7 +157,7 @@ Create Table Bill
 (
 	Id int primary key identity (10,1),
 	Date datetime2 not null default getDate(),
-	Amount money not null check(Amount > 0),
+	Amount money not null check(Amount >= 0),
 	PId int foreign key references Patient(Id) unique,
 	RID int foreign key references Receptionist(Id)
 )
